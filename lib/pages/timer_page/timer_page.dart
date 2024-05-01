@@ -12,12 +12,24 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> {
   Duration duration = Duration();
   Timer? timer;
-
+  bool isCounting = false;
   bool isRunning = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void startTimer() {
+    if (!isCounting) {
+      timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+      isCounting = !isCounting;
+    } else {
+      setState(() {
+        timer?.cancel();
+        isCounting = false;
+      });
+    }
   }
 
   void addTime() {
@@ -32,42 +44,28 @@ class _TimerPageState extends State<TimerPage> {
 
   void stopTimer() {
     setState(() {
-      final seconds = duration.inSeconds;
-      duration = Duration(seconds: seconds);
+      timer?.cancel();
     });
   }
 
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+  void reset() {
+    setState(() {
+      duration = Duration(minutes: 0, seconds: 0);
+    });
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          buildTime(),
+          buildTime(minutes: duration.inMinutes, seconds: duration.inSeconds),
           controls(),
         ],
       ),
     );
   }
 
-  Widget controls() {
-    return isRunning
-        ? buttonWidget(text: 'Почати', onClick: startTimer())
-        : buttonWidget(text: 'зупинити', onClick: stopTimer());
-  }
-
-  Widget buttonWidget({required String text, required void onClick}) {
-    return ElevatedButton(
-        onPressed: () {
-          onClick;
-        },
-        child: Text('$text'));
-  }
-
-  Widget buildTime() {
+  Widget buildTime({required minutes, required seconds}) {
     String correctDigits(int digit) => digit.toString().padLeft(2, '0');
     final minutes = correctDigits(duration.inMinutes.remainder(60));
     final seconds = correctDigits(duration.inSeconds.remainder(60));
@@ -103,5 +101,49 @@ class _TimerPageState extends State<TimerPage> {
         fontSize: 72,
       ),
     );
+  }
+
+  Widget controls() {
+    return isRunning
+        ? Row(children: [
+            ElevatedButton(
+              onPressed: () {
+                startTimer();
+                setState(() {
+                  isRunning = false;
+                });
+              },
+              child: Text('Зупинити'),
+            )
+          ])
+        : duration.inMinutes > 0 || duration.inSeconds > 0
+            ? Row(children: [
+                ElevatedButton(
+                  onPressed: () {
+                    startTimer();
+                    setState(() {
+                      isRunning = false;
+                    });
+                  },
+                  child: Text('Продовжити'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    reset();
+                  },
+                  child: Text('Обнулити'),
+                )
+              ])
+            : Row(children: [
+                ElevatedButton(
+                  onPressed: () {
+                    startTimer();
+                    setState(() {
+                      isRunning = true;
+                    });
+                  },
+                  child: Text('Почати'),
+                )
+              ]);
   }
 }
