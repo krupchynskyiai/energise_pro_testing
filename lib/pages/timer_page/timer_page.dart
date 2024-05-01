@@ -55,8 +55,10 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           buildTime(minutes: duration.inMinutes, seconds: duration.inSeconds),
           controls(),
@@ -69,9 +71,26 @@ class _TimerPageState extends State<TimerPage> {
     String correctDigits(int digit) => digit.toString().padLeft(2, '0');
     final minutes = correctDigits(duration.inMinutes.remainder(60));
     final seconds = correctDigits(duration.inSeconds.remainder(60));
+    final hours = correctDigits(duration.inHours.remainder(60));
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        timeBox(timeAmount: hours, cardName: 'HOURS'),
+        const SizedBox(
+          width: 8,
+        ),
+        const Text(
+          ':',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: Colors.black,
+            fontSize: 72,
+          ),
+        ),
+        const SizedBox(
+          width: 8,
+        ),
         timeBox(timeAmount: minutes, cardName: 'MINUTES'),
         const SizedBox(
           width: 8,
@@ -105,7 +124,7 @@ class _TimerPageState extends State<TimerPage> {
 
   Widget controls() {
     return isRunning
-        ? Row(children: [
+        ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             ElevatedButton(
               onPressed: () {
                 startTimer();
@@ -117,12 +136,12 @@ class _TimerPageState extends State<TimerPage> {
             )
           ])
         : duration.inMinutes > 0 || duration.inSeconds > 0
-            ? Row(children: [
+            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 ElevatedButton(
                   onPressed: () {
                     startTimer();
                     setState(() {
-                      isRunning = false;
+                      isRunning = true;
                     });
                   },
                   child: Text('Продовжити'),
@@ -134,7 +153,7 @@ class _TimerPageState extends State<TimerPage> {
                   child: Text('Обнулити'),
                 )
               ])
-            : Row(children: [
+            : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 ElevatedButton(
                   onPressed: () {
                     startTimer();
