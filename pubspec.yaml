@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get_ip_address: ^0.0.6
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:

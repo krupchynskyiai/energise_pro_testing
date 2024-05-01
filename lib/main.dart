@@ -1,3 +1,4 @@
+import 'package:energise_pro_testing/pages/ip_location_page/ip_location_page.dart';
 import 'package:energise_pro_testing/pages/timer_page/timer_page.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData(), home: const TimerPage());
+    return MaterialApp(theme: ThemeData(), home: IPLocation());
   }
 }
