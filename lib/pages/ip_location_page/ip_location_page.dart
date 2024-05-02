@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_ip_address/get_ip_address.dart';
 
 import 'package:latlong2/latlong.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IPLocation extends StatefulWidget {
   IPLocation({super.key});
@@ -27,25 +30,52 @@ class IPLocationState extends State<IPLocation> {
   void main() async {
     print('here');
     try {
-      /// Initialize Ip Address
-      final ipAddress = IpAddress(type: RequestType.json);
+      final cacheKey = 'ip_address';
 
-      /// Get the IpAddress based on requestType.
-      dynamic data = await ipAddress.getIpAddress();
-      fetchData(data['ip']);
+      FileInfo? fileInfo =
+          await DefaultCacheManager().getFileFromCache(cacheKey);
+
+      if (fileInfo != null && fileInfo.validTill.isAfter(DateTime.now())) {
+        dynamic cachedData = jsonDecode(await fileInfo.file.readAsString());
+        fetchData(cachedData['ip']);
+      } else {
+        final ipAddress = IpAddress(type: RequestType.json);
+        dynamic data = await ipAddress.getIpAddress();
+        fetchData(data['ip']);
+
+        await DefaultCacheManager().putFile(
+          cacheKey,
+          utf8.encode(jsonEncode(data)),
+          maxAge: Duration(minutes: 5),
+        );
+      }
     } on IpAddressException catch (exception) {
-      /// Handle the exception.
       print(exception.message);
     }
   }
 
   Future fetchData(ipAddress) async {
-    final response =
-        await http.get(Uri.parse('http://ip-api.com/json/$ipAddress'));
-    fetchResult = jsonDecode(response.body);
-    setState(() {
-      isLoading = false;
-    });
+    String cacheKey = 'ip_location_$ipAddress';
+    FileInfo? fileInfo = await DefaultCacheManager().getFileFromCache(cacheKey);
+    if (fileInfo != null && fileInfo.validTill.isAfter(DateTime.now())) {
+      fetchResult = jsonDecode(await fileInfo.file.readAsString());
+      print('got from cache');
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      final ipAddress = IpAddress(type: RequestType.json);
+      dynamic data = await ipAddress.getIpAddress();
+      final response =
+          await http.get(Uri.parse('http://ip-api.com/json/${data}'));
+      fetchResult = jsonDecode(response.body);
+      await DefaultCacheManager()
+          .putFile(cacheKey, response.bodyBytes, maxAge: Duration(minutes: 5));
+      print('got from api');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _refresh() {
@@ -55,7 +85,7 @@ class IPLocationState extends State<IPLocation> {
 
   Widget build(BuildContext context) {
     return isLoading
-        ? Text('Loading')
+        ? Text(AppLocalizations.of(context)!.loading)
         : Container(
             height: 500,
             width: double.infinity,
@@ -94,19 +124,32 @@ class IPLocationState extends State<IPLocation> {
                         ],
                       ),
                     ),
-                    Text('Country - ${fetchResult['country']}'),
-                    Text('Country Code - ${fetchResult['countryCode']}'),
-                    Text('Region - ${fetchResult['region']}'),
-                    Text('Country Code - ${fetchResult['regionName']}'),
-                    Text('Country Code - ${fetchResult['city']}'),
-                    Text('Country Code - ${fetchResult['zip']}'),
-                    Text('Country Code - ${fetchResult['lat']}'),
-                    Text('Country Code - ${fetchResult['lon']}'),
-                    Text('Country Code - ${fetchResult['timezone']}'),
-                    Text('Country Code - ${fetchResult['isp']}'),
-                    Text('Country Code - ${fetchResult['org']}'),
-                    Text('Country Code - ${fetchResult['as']}'),
-                    Text('Country Code - ${fetchResult['query']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.country} -${fetchResult['country']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.countryCode} - ${fetchResult['countryCode']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.region} - ${fetchResult['region']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.regionName} - ${fetchResult['regionName']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.city} - ${fetchResult['city']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.zip} - ${fetchResult['zip']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.latitude} - ${fetchResult['lat']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.longitude} - ${fetchResult['lon']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.timezone} - ${fetchResult['timezone']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.isp} - ${fetchResult['isp']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.organization} - ${fetchResult['org']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.as} - ${fetchResult['as']}'),
+                    Text(
+                        '${AppLocalizations.of(context)!.query} - ${fetchResult['query']}'),
                     ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -115,7 +158,7 @@ class IPLocationState extends State<IPLocation> {
 
                           main();
                         },
-                        child: Text('Refresh'))
+                        child: Text('${AppLocalizations.of(context)!.refresh}'))
                   ],
                 ),
               ),

@@ -1,12 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AdditionalPage extends StatelessWidget {
+class AdditionalPage extends StatefulWidget {
   AdditionalPage({super.key});
 
+  AdditionalPageState createState() => AdditionalPageState();
+}
+
+class AdditionalPageState extends State<AdditionalPage> {
+  double ratingVal = 0;
   final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
     ..setBackgroundColor(const Color(0x00000000))
@@ -30,17 +37,59 @@ class AdditionalPage extends StatelessWidget {
     ..loadRequest(Uri.parse(
         'https://energise.notion.site/Flutter-f86d340cadb34e9cb1ef092df4e566b7'));
 
+  void showRating(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('${AppLocalizations.of(context)!.rateApp}'),
+              content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('${AppLocalizations.of(context)!.leaveAStar}'),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    rating(),
+                  ]),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('${AppLocalizations.of(context)!.ok}'))
+              ],
+            ));
+  }
+
+  Widget rating() {
+    return RatingBar.builder(
+      minRating: 1,
+      itemSize: 50,
+      itemPadding: EdgeInsets.symmetric(horizontal: 20),
+      itemBuilder: (context, _) => Icon(Icons.star),
+      updateOnDrag: true,
+      onRatingUpdate: (rating) => setState(() {
+        this.ratingVal = ratingVal;
+      }),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(onPressed: () {}, child: Text('Rate App')),
+        ElevatedButton(
+            onPressed: () {
+              showRating(context);
+            },
+            child: Text('${AppLocalizations.of(context)!.rateApp}')),
         ElevatedButton(
             onPressed: () {
               Share.share(
                 'check out my testing application https://energise.notion.site/Flutter-f86d340cadb34e9cb1ef092df4e566b7',
               );
             },
-            child: Text('Share')),
+            child: Text('${AppLocalizations.of(context)!.share}')),
         ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -51,7 +100,7 @@ class AdditionalPage extends StatelessWidget {
                             body: WebViewWidget(controller: controller),
                           )));
             },
-            child: Text('Link'))
+            child: Text('${AppLocalizations.of(context)!.link}'))
       ],
     );
   }

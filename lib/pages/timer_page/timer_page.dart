@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
@@ -76,7 +77,9 @@ class _TimerPageState extends State<TimerPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        timeBox(timeAmount: hours, cardName: 'HOURS'),
+        timeBox(
+            timeAmount: hours,
+            cardName: '${AppLocalizations.of(context)!.hours}'),
         const SizedBox(
           width: 8,
         ),
@@ -91,7 +94,9 @@ class _TimerPageState extends State<TimerPage> {
         const SizedBox(
           width: 8,
         ),
-        timeBox(timeAmount: minutes, cardName: 'MINUTES'),
+        timeBox(
+            timeAmount: minutes,
+            cardName: '${AppLocalizations.of(context)!.minutes}'),
         const SizedBox(
           width: 8,
         ),
@@ -106,7 +111,9 @@ class _TimerPageState extends State<TimerPage> {
         const SizedBox(
           width: 8,
         ),
-        timeBox(timeAmount: seconds, cardName: 'SECONDS'),
+        timeBox(
+            timeAmount: seconds,
+            cardName: '${AppLocalizations.of(context)!.seconds}'),
       ],
     );
   }
@@ -132,7 +139,7 @@ class _TimerPageState extends State<TimerPage> {
                   isRunning = false;
                 });
               },
-              child: Text('Зупинити'),
+              child: Text('${AppLocalizations.of(context)!.stop}'),
             )
           ])
         : duration.inMinutes > 0 || duration.inSeconds > 0
@@ -144,13 +151,13 @@ class _TimerPageState extends State<TimerPage> {
                       isRunning = true;
                     });
                   },
-                  child: Text('Продовжити'),
+                  child: Text('${AppLocalizations.of(context)!.cont}'),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     reset();
                   },
-                  child: Text('Обнулити'),
+                  child: Text('${AppLocalizations.of(context)!.refresh}'),
                 )
               ])
             : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -161,7 +168,7 @@ class _TimerPageState extends State<TimerPage> {
                       isRunning = true;
                     });
                   },
-                  child: Text('Почати'),
+                  child: Text('${AppLocalizations.of(context)!.start}'),
                 )
               ]);
   }

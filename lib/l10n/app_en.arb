@@ -1,0 +1,118 @@
+{
+  "language": "English",
+  "@language": {
+    "description": "The current Language"
+  },
+  "country": "County",
+  "@language": {
+    "description": "Api Response Country"
+  },
+  "countryCode": "Country Code",
+  "@language": {
+    "description": "Api Response Country Code"
+  },
+  "region": "Region",
+  "@language": {
+    "description": "Api Response Region"
+  },
+  "regionName": "Region Name",
+  "@language": {
+    "description": "Api Response Region Name"
+  },
+  "city": "City",
+  "@language": {
+    "description": "Api Response City"
+  },
+  "zip": "ZIP",
+  "@language": {
+    "description": "Api Response ZIP"
+  },
+  "latitude": "Latitude",
+  "@language": {
+    "description": "Api Response Latitude"
+  },
+  "longitude": "Longitude",
+  "@language": {
+    "description": "Api Response Longitude"
+  },
+  "timezone": "Timezone",
+  "@language": {
+    "description": "Api Response Timezone"
+  },
+  "isp": "ISP",
+  "@language": {
+    "description": "Api Response ISP"
+  },
+  "organization": "Organization",
+  "@language": {
+    "description": "Api Response Organization"
+  },
+  "as": "AS",
+  "@language": {
+    "description": "Api Response AS"
+  },
+  "query": "Query",
+  "@language": {
+    "description": "Api Response Query"
+  },
+  "refresh": "Refresh",
+  "@language": {
+    "description": "Refresh Button"
+  },
+  "loading": "Loading",
+  "@language": {
+    "description": "Loading"
+  },
+  "hours": "HOURS",
+  "@language": {
+    "description": "HOURS"
+  },
+  "minutes": "MINUTES",
+  "@language": {
+    "description": "MINUTES"
+  },
+  "seconds": "SECONDS",
+  "@language": {
+    "description": "SECONDS"
+  },
+  "stop": "Stop",
+  "@language": {
+    "description": "Stop"
+  },
+  "cont": "Continue",
+  "@language": {
+    "description": "Continue"
+  },
+  "start": "Start",
+  "@language": {
+    "description": "Start"
+  },
+  "link": "Link",
+  "@language": {
+    "description": "Link"
+  },
+  "rateApp": "Rate App",
+  "@language": {
+    "description": "Rate App"
+  },
+  "share": "Share",
+  "@language": {
+    "description": "Share"
+  },
+  "rateTetingTask": "Rate Testing Task",
+  "@language": {
+    "description": "Rate Testing Task"
+  },
+  "leaveAStar": "Leave a star",
+  "@language": {
+    "description": "Leave a star"
+  },
+  "ok": "ok",
+  "@language": {
+    "description": "ok"
+  },
+  "changeLanguage": "Change Language",
+  "@language": {
+    "description": "Change Language"
+  }
+}
