@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:energise_pro_testing/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:share_plus/share_plus.dart';
@@ -41,12 +42,12 @@ class AdditionalPageState extends State<AdditionalPage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('${AppLocalizations.of(context)!.rateApp}'),
+              title: Text(AppLocalizations.of(context)!.rateApp),
               content: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('${AppLocalizations.of(context)!.leaveAStar}'),
+                    Text(AppLocalizations.of(context)!.leaveAStar),
                     const SizedBox(
                       height: 32,
                     ),
@@ -57,7 +58,7 @@ class AdditionalPageState extends State<AdditionalPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('${AppLocalizations.of(context)!.ok}'))
+                    child: Text(AppLocalizations.of(context)!.ok))
               ],
             ));
   }
@@ -65,33 +66,63 @@ class AdditionalPageState extends State<AdditionalPage> {
   Widget rating() {
     return RatingBar.builder(
       minRating: 1,
-      itemSize: 50,
-      itemPadding: EdgeInsets.symmetric(horizontal: 20),
-      itemBuilder: (context, _) => Icon(Icons.star),
+      itemSize: 25,
+      itemPadding: const EdgeInsets.symmetric(horizontal: 10),
+      itemBuilder: (context, _) => const Icon(Icons.star),
       updateOnDrag: true,
       onRatingUpdate: (rating) => setState(() {
-        this.ratingVal = ratingVal;
+        ratingVal = ratingVal;
       }),
     );
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-            onPressed: () {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment(0.8, 1),
+          colors: <Color>[
+            Color(0xff1f005c),
+            Color(0xff5b0060),
+            Color(0xff870160),
+            Color(0xffac255e),
+            Color(0xffca485c),
+            Color(0xffe16b5c),
+            Color(0xfff39060),
+            Color(0xffffb56b),
+          ],
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ButtonTemplate(
+            linkOrText: AppLocalizations.of(context)!.rateApp,
+            isImage: false,
+            functionGot: () {
               showRating(context);
             },
-            child: Text('${AppLocalizations.of(context)!.rateApp}')),
-        ElevatedButton(
-            onPressed: () {
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ButtonTemplate(
+            linkOrText: AppLocalizations.of(context)!.share,
+            isImage: false,
+            functionGot: () {
               Share.share(
                 'check out my testing application https://energise.notion.site/Flutter-f86d340cadb34e9cb1ef092df4e566b7',
               );
             },
-            child: Text('${AppLocalizations.of(context)!.share}')),
-        ElevatedButton(
-            onPressed: () {
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ButtonTemplate(
+            linkOrText: AppLocalizations.of(context)!.link,
+            isImage: false,
+            functionGot: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -100,47 +131,9 @@ class AdditionalPageState extends State<AdditionalPage> {
                             body: WebViewWidget(controller: controller),
                           )));
             },
-            child: Text('${AppLocalizations.of(context)!.link}'))
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
-
-// class WebViewWidgetHere extends StatelessWidget {
-//   WebViewWidgetHere(this.url);
-//   String url;
-//   final controller = WebViewController()
-//     ..setJavaScriptMode(JavaScriptMode.unrestricted)
-//     ..setBackgroundColor(const Color(0x00000000))
-//     ..setNavigationDelegate(
-//       NavigationDelegate(
-//         onProgress: (int progress) {
-//           // Update loading bar.
-//         },
-//         onPageStarted: (String url) {},
-//         onPageFinished: (String url) {},
-//         onWebResourceError: (WebResourceError error) {},
-//         onNavigationRequest: (NavigationRequest request) {
-//           if (request.url.startsWith(url)) {
-//             return NavigationDecision.prevent;
-//           }
-//           return NavigationDecision.navigate;
-//         },
-//       ),
-//     )
-//     ..loadRequest(Uri.parse('$url'));
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('WebView example'),
-//       ),
-//       body: WebViewWidget(
-//         controller: controller,
-//         initialUrl: url,
-//         javascriptMode: JavascriptMode.unrestricted,
-//       ),
-//     );
-//   }
-// }

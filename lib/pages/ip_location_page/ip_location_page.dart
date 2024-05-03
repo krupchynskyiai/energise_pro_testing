@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:energise_pro_testing/components/button.dart';
+import 'package:energise_pro_testing/components/loader.dart';
+import 'package:energise_pro_testing/pages/ip_location_page/apiInfoFormater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -12,15 +15,17 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IPLocation extends StatefulWidget {
-  IPLocation({super.key});
+  const IPLocation({super.key});
 
+  @override
   IPLocationState createState() => IPLocationState();
 }
 
 class IPLocationState extends State<IPLocation> {
-  var fetchResult;
+  dynamic fetchResult;
   bool isLoading = true;
 
+  @override
   void initState() {
     super.initState();
 
@@ -30,7 +35,7 @@ class IPLocationState extends State<IPLocation> {
   void main() async {
     print('here');
     try {
-      final cacheKey = 'ip_address';
+      const cacheKey = 'ip_address';
 
       FileInfo? fileInfo =
           await DefaultCacheManager().getFileFromCache(cacheKey);
@@ -46,7 +51,7 @@ class IPLocationState extends State<IPLocation> {
         await DefaultCacheManager().putFile(
           cacheKey,
           utf8.encode(jsonEncode(data)),
-          maxAge: Duration(minutes: 5),
+          maxAge: const Duration(minutes: 5),
         );
       }
     } on IpAddressException catch (exception) {
@@ -66,8 +71,7 @@ class IPLocationState extends State<IPLocation> {
     } else {
       final ipAddress = IpAddress(type: RequestType.json);
       dynamic data = await ipAddress.getIpAddress();
-      final response =
-          await http.get(Uri.parse('http://ip-api.com/json/${data}'));
+      final response = await http.get(Uri.parse('http://ip-api.com/json/'));
       fetchResult = jsonDecode(response.body);
       await DefaultCacheManager()
           .putFile(cacheKey, response.bodyBytes, maxAge: Duration(minutes: 5));
@@ -85,82 +89,93 @@ class IPLocationState extends State<IPLocation> {
 
   Widget build(BuildContext context) {
     return isLoading
-        ? Text(AppLocalizations.of(context)!.loading)
+        ? Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment(0.8, 1),
+                colors: <Color>[
+                  Color(0xff1f005c),
+                  Color(0xff5b0060),
+                  Color(0xff870160),
+                  Color(0xffac255e),
+                  Color(0xffca485c),
+                  Color(0xffe16b5c),
+                  Color(0xfff39060),
+                  Color(0xffffb56b),
+                ],
+              ),
+            ),
+            child: Loader())
         : Container(
-            height: 500,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment(0.8, 1),
+                colors: <Color>[
+                  Color(0xff1f005c),
+                  Color(0xff5b0060),
+                  Color(0xff870160),
+                  Color(0xffac255e),
+                  Color(0xffca485c),
+                  Color(0xffe16b5c),
+                  Color(0xfff39060),
+                  Color(0xffffb56b),
+                ],
+              ),
+            ),
             width: double.infinity,
             child: RefreshIndicator(
               onRefresh: _refresh,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 250,
-                      child: FlutterMap(
-                        options: MapOptions(
-                          initialCenter:
-                              LatLng(fetchResult['lat'], fetchResult['lon']),
-                          initialZoom: 9.2,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName: 'com.example.app',
-                          ),
-                          MarkerLayer(
-                            markers: [
-                              Marker(
-                                point: LatLng(
-                                    fetchResult['lat'], fetchResult['lon']),
-                                width: 50,
-                                height: 50,
-                                child: SvgPicture.asset(
-                                    'assets/icons/geolocation.svg'),
-                              ),
-                            ],
-                          )
-                        ],
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 250,
+                    child: FlutterMap(
+                      options: MapOptions(
+                        initialCenter:
+                            LatLng(fetchResult['lat'], fetchResult['lon']),
+                        initialZoom: 9.2,
                       ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'com.example.app',
+                        ),
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                              point: LatLng(
+                                  fetchResult['lat'], fetchResult['lon']),
+                              width: 50,
+                              height: 50,
+                              child: SvgPicture.asset(
+                                  'assets/icons/geolocation.svg'),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                    Text(
-                        '${AppLocalizations.of(context)!.country} -${fetchResult['country']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.countryCode} - ${fetchResult['countryCode']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.region} - ${fetchResult['region']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.regionName} - ${fetchResult['regionName']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.city} - ${fetchResult['city']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.zip} - ${fetchResult['zip']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.latitude} - ${fetchResult['lat']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.longitude} - ${fetchResult['lon']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.timezone} - ${fetchResult['timezone']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.isp} - ${fetchResult['isp']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.organization} - ${fetchResult['org']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.as} - ${fetchResult['as']}'),
-                    Text(
-                        '${AppLocalizations.of(context)!.query} - ${fetchResult['query']}'),
-                    ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                          });
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                    child: ApiInfoFormater(apiResponse: fetchResult),
+                  ),
+                  const SizedBox(height: 25),
+                  ButtonTemplate(
+                      linkOrText: 'assets/icons/refresh.svg',
+                      isImage: true,
+                      functionGot: () {
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                          main();
-                        },
-                        child: Text('${AppLocalizations.of(context)!.refresh}'))
-                  ],
-                ),
+                        main();
+                      })
+                ],
               ),
             ));
   }

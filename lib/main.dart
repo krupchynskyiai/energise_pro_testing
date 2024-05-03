@@ -18,6 +18,7 @@ void main() {
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
+  @override
   MainAppState createState() => MainAppState();
 }
 
@@ -36,7 +37,7 @@ class MainAppState extends State<MainApp> {
       theme: ThemeData(),
       home: TabBarWidget(lang: isEnglish, toggleLanguage: _toggleLanguage),
       supportedLocales: L10n.all,
-      locale: isEnglish ? Locale('en') : Locale('de'),
+      locale: isEnglish ? const Locale('en') : const Locale('de'),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -46,19 +47,14 @@ class MainAppState extends State<MainApp> {
     );
   }
 }
-// ElevatedButton(
-//             onPressed: () {
-//               setState(() {
-//                 widget.lang ? widget.lang = false : widget.lang = true;
-//               });
-//             },
-//             child: Text('Change Language')),
 
 class TabBarWidget extends StatefulWidget {
-  TabBarWidget({super.key, required this.lang, required this.toggleLanguage});
+  const TabBarWidget(
+      {super.key, required this.lang, required this.toggleLanguage});
   final VoidCallback toggleLanguage;
-  bool lang;
+  final bool lang;
 
+  @override
   TabBarState createState() => TabBarState();
 }
 
@@ -95,7 +91,7 @@ class TabBarState extends State<TabBarWidget> {
               ),
               Tab(
                 icon: SvgPicture.asset(
-                  'assets/icons/gear.svg',
+                  'assets/icons/translate.svg',
                   height: 20,
                   width: 20,
                 ),
@@ -105,8 +101,8 @@ class TabBarState extends State<TabBarWidget> {
         ),
         body: TabBarView(
           children: <Widget>[
-            TimerPage(),
-            IPLocation(),
+            const TimerPage(),
+            const IPLocation(),
             AdditionalPage(),
             ChangeLanguage(
                 lang: widget.lang,

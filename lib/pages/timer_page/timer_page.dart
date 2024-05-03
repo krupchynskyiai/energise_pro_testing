@@ -1,17 +1,20 @@
 import 'dart:async';
 
+import 'package:energise_pro_testing/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pulsator/pulsator.dart';
 
 class TimerPage extends StatefulWidget {
   const TimerPage({super.key});
 
   @override
-  _TimerPageState createState() => _TimerPageState();
+  TimerPageState createState() => TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> {
-  Duration duration = Duration();
+class TimerPageState extends State<TimerPage> {
+  Duration duration = const Duration();
   Timer? timer;
   bool isCounting = false;
   bool isRunning = false;
@@ -23,7 +26,7 @@ class _TimerPageState extends State<TimerPage> {
 
   void startTimer() {
     if (!isCounting) {
-      timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+      timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
       isCounting = !isCounting;
     } else {
       setState(() {
@@ -34,7 +37,7 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void addTime() {
-    final addSecond = 1;
+    const addSecond = 1;
 
     setState(() {
       final seconds = duration.inSeconds + addSecond;
@@ -51,19 +54,39 @@ class _TimerPageState extends State<TimerPage> {
 
   void reset() {
     setState(() {
-      duration = Duration(minutes: 0, seconds: 0);
+      duration = const Duration(minutes: 0, seconds: 0);
     });
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          buildTime(minutes: duration.inMinutes, seconds: duration.inSeconds),
-          controls(),
-        ],
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment(0.8, 1),
+          colors: <Color>[
+            Color(0xff1f005c),
+            Color(0xff5b0060),
+            Color(0xff870160),
+            Color(0xffac255e),
+            Color(0xffca485c),
+            Color(0xffe16b5c),
+            Color(0xfff39060),
+            Color(0xffffb56b),
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            buildTime(minutes: duration.inMinutes, seconds: duration.inSeconds),
+            controls(),
+          ],
+        ),
       ),
     );
   }
@@ -78,8 +101,7 @@ class _TimerPageState extends State<TimerPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         timeBox(
-            timeAmount: hours,
-            cardName: '${AppLocalizations.of(context)!.hours}'),
+            timeAmount: hours, cardName: AppLocalizations.of(context)!.hours),
         const SizedBox(
           width: 8,
         ),
@@ -87,7 +109,7 @@ class _TimerPageState extends State<TimerPage> {
           ':',
           style: TextStyle(
             fontWeight: FontWeight.w800,
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 72,
           ),
         ),
@@ -96,7 +118,7 @@ class _TimerPageState extends State<TimerPage> {
         ),
         timeBox(
             timeAmount: minutes,
-            cardName: '${AppLocalizations.of(context)!.minutes}'),
+            cardName: AppLocalizations.of(context)!.minutes),
         const SizedBox(
           width: 8,
         ),
@@ -104,7 +126,7 @@ class _TimerPageState extends State<TimerPage> {
           ':',
           style: TextStyle(
             fontWeight: FontWeight.w800,
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 72,
           ),
         ),
@@ -113,7 +135,7 @@ class _TimerPageState extends State<TimerPage> {
         ),
         timeBox(
             timeAmount: seconds,
-            cardName: '${AppLocalizations.of(context)!.seconds}'),
+            cardName: AppLocalizations.of(context)!.seconds),
       ],
     );
   }
@@ -123,7 +145,7 @@ class _TimerPageState extends State<TimerPage> {
       timeAmount,
       style: const TextStyle(
         fontWeight: FontWeight.w800,
-        color: Colors.black,
+        color: Colors.white,
         fontSize: 72,
       ),
     );
@@ -131,45 +153,80 @@ class _TimerPageState extends State<TimerPage> {
 
   Widget controls() {
     return isRunning
-        ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ElevatedButton(
-              onPressed: () {
-                startTimer();
-                setState(() {
-                  isRunning = false;
-                });
-              },
-              child: Text('${AppLocalizations.of(context)!.stop}'),
-            )
-          ])
+        ? Expanded(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              ButtonTemplate(
+                linkOrText: 'assets/icons/pause.svg',
+                isImage: true,
+                functionGot: () {
+                  startTimer();
+                  setState(() {
+                    isRunning = false;
+                  });
+                },
+              ),
+            ]),
+          )
         : duration.inMinutes > 0 || duration.inSeconds > 0
-            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                ElevatedButton(
-                  onPressed: () {
-                    startTimer();
-                    setState(() {
-                      isRunning = true;
-                    });
-                  },
-                  child: Text('${AppLocalizations.of(context)!.cont}'),
+            ? Expanded(
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ButtonTemplate(
+                    linkOrText: 'assets/icons/play_bk.svg',
+                    isImage: true,
+                    functionGot: () {
+                      startTimer();
+                      setState(() {
+                        isRunning = true;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  ButtonTemplate(
+                    linkOrText: 'assets/icons/refresh.svg',
+                    isImage: true,
+                    functionGot: () {
+                      reset();
+                    },
+                  )
+                ]),
+              )
+            : Expanded(
+                child: Pulsator(
+                  style: const PulseStyle(
+                      color: Color(0xff870160),
+                      borderColor: Colors.white,
+                      borderWidth: 4,
+                      gradientStyle: PulseGradientStyle(
+                          startColor: Colors.white,
+                          start: 0.5,
+                          reverseColors: true)),
+                  count: 5,
+                  duration: const Duration(seconds: 5),
+                  autoStart: true,
+                  fit: PulseFit.contain,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      surfaceTintColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    onPressed: () {
+                      startTimer();
+                      setState(() {
+                        isRunning = true;
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/icons/play.svg',
+                      height: 50,
+                      width: 50,
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    reset();
-                  },
-                  child: Text('${AppLocalizations.of(context)!.refresh}'),
-                )
-              ])
-            : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                ElevatedButton(
-                  onPressed: () {
-                    startTimer();
-                    setState(() {
-                      isRunning = true;
-                    });
-                  },
-                  child: Text('${AppLocalizations.of(context)!.start}'),
-                )
-              ]);
+              );
   }
 }
