@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:energise_pro_testing/components/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -8,8 +6,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdditionalPage extends StatefulWidget {
-  AdditionalPage({super.key});
+  const AdditionalPage({super.key});
 
+  @override
   AdditionalPageState createState() => AdditionalPageState();
 }
 
@@ -76,6 +75,7 @@ class AdditionalPageState extends State<AdditionalPage> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(

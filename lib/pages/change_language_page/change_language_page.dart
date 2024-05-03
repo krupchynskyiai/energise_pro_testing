@@ -1,18 +1,14 @@
-import 'dart:async';
-
 import 'package:energise_pro_testing/components/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChangeLanguage extends StatefulWidget {
-  ChangeLanguage(
+  const ChangeLanguage(
       {super.key, required this.lang, required this.onChangeLanguage});
   final bool lang;
   final ValueChanged<bool> onChangeLanguage;
 
+  @override
   ChangeLanguageState createState() => ChangeLanguageState();
 }
 

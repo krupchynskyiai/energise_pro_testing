@@ -3,12 +3,9 @@ import 'package:energise_pro_testing/pages/change_language_page/change_language_
 import 'package:energise_pro_testing/pages/ip_location_page/ip_location_page.dart';
 import 'package:energise_pro_testing/pages/timer_page/timer_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:energise_pro_testing/l10n/l10n.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
@@ -103,7 +100,7 @@ class TabBarState extends State<TabBarWidget> {
           children: <Widget>[
             const TimerPage(),
             const IPLocation(),
-            AdditionalPage(),
+            const AdditionalPage(),
             ChangeLanguage(
                 lang: widget.lang,
                 onChangeLanguage: (newLang) {

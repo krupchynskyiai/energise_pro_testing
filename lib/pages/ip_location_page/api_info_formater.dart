@@ -5,21 +5,22 @@ class ApiInfoFormater extends StatelessWidget {
   ApiInfoFormater({super.key, required this.apiResponse});
   dynamic apiResponse;
 
+  @override
   Widget build(BuildContext context) {
     dynamic keys = [
-      '${AppLocalizations.of(context)!.country}',
-      '${AppLocalizations.of(context)!.countryCode}',
-      '${AppLocalizations.of(context)!.region}',
-      '${AppLocalizations.of(context)!.regionName}',
-      '${AppLocalizations.of(context)!.city}',
-      '${AppLocalizations.of(context)!.zip}',
-      '${AppLocalizations.of(context)!.latitude}',
-      '${AppLocalizations.of(context)!.longitude}',
-      '${AppLocalizations.of(context)!.timezone}',
-      '${AppLocalizations.of(context)!.isp}',
-      '${AppLocalizations.of(context)!.organization}',
-      '${AppLocalizations.of(context)!.as}',
-      '${AppLocalizations.of(context)!.query}'
+      AppLocalizations.of(context)!.country,
+      AppLocalizations.of(context)!.countryCode,
+      AppLocalizations.of(context)!.region,
+      AppLocalizations.of(context)!.regionName,
+      AppLocalizations.of(context)!.city,
+      AppLocalizations.of(context)!.zip,
+      AppLocalizations.of(context)!.latitude,
+      AppLocalizations.of(context)!.longitude,
+      AppLocalizations.of(context)!.timezone,
+      AppLocalizations.of(context)!.isp,
+      AppLocalizations.of(context)!.organization,
+      AppLocalizations.of(context)!.as,
+      AppLocalizations.of(context)!.query
     ];
     dynamic apiValues = [
       'country',

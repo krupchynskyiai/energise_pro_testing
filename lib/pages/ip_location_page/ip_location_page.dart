@@ -1,18 +1,14 @@
 import 'dart:convert';
-
 import 'package:energise_pro_testing/components/button.dart';
 import 'package:energise_pro_testing/components/loader.dart';
-import 'package:energise_pro_testing/pages/ip_location_page/apiInfoFormater.dart';
+import 'package:energise_pro_testing/pages/ip_location_page/api_info_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_ip_address/get_ip_address.dart';
-
 import 'package:latlong2/latlong.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IPLocation extends StatefulWidget {
   const IPLocation({super.key});
@@ -33,7 +29,6 @@ class IPLocationState extends State<IPLocation> {
   }
 
   void main() async {
-    print('here');
     try {
       const cacheKey = 'ip_address';
 
@@ -73,8 +68,8 @@ class IPLocationState extends State<IPLocation> {
       dynamic data = await ipAddress.getIpAddress();
       final response = await http.get(Uri.parse('http://ip-api.com/json/'));
       fetchResult = jsonDecode(response.body);
-      await DefaultCacheManager()
-          .putFile(cacheKey, response.bodyBytes, maxAge: Duration(minutes: 5));
+      await DefaultCacheManager().putFile(cacheKey, response.bodyBytes,
+          maxAge: const Duration(minutes: 5));
       print('got from api');
       setState(() {
         isLoading = false;
@@ -84,9 +79,10 @@ class IPLocationState extends State<IPLocation> {
 
   Future<void> _refresh() {
     main();
-    return Future.delayed(Duration(seconds: 2));
+    return Future.delayed(const Duration(seconds: 2));
   }
 
+  @override
   Widget build(BuildContext context) {
     return isLoading
         ? Container(
@@ -106,7 +102,7 @@ class IPLocationState extends State<IPLocation> {
                 ],
               ),
             ),
-            child: Loader())
+            child: const Loader())
         : Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
